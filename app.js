@@ -1,13 +1,15 @@
-// ===============================
+// =======================================
 // Lua Studio - app.js
-// Monaco Editor + Lua Runtime
-// ===============================
+// Monaco Editor + Lua Language + Runner
+// =======================================
 
 
 let editor;
 
 
+// =======================================
 // Load Monaco Editor
+// =======================================
 
 require.config({
     paths: {
@@ -19,32 +21,105 @@ require.config({
 require(["vs/editor/editor.main"], function () {
 
 
-    // Create Lua language
+    // ===================================
+    // Register Lua Language
+    // ===================================
 
     monaco.languages.register({
-        id: "lua"
+        id: "lua",
+        extensions: [".lua"],
+        aliases: ["Lua", "lua"]
     });
 
 
-    // Basic Lua syntax highlighting
+
+    // ===================================
+    // Lua Syntax Highlighting
+    // ===================================
 
     monaco.languages.setMonarchTokensProvider("lua", {
 
+        keywords: [
+            "and",
+            "break",
+            "do",
+            "else",
+            "elseif",
+            "end",
+            "false",
+            "for",
+            "function",
+            "goto",
+            "if",
+            "in",
+            "local",
+            "nil",
+            "not",
+            "or",
+            "repeat",
+            "return",
+            "then",
+            "true",
+            "until",
+            "while"
+        ],
+
+
         tokenizer: {
+
 
             root: [
 
-                [/\b(local|function|end|if|then|else|for|while|do|return|and|or|not)\b/, "keyword"],
+                // Comments
+                [
+                    /--.*$/,
+                    "comment"
+                ],
 
-                [/"[^"]*"/, "string"],
 
-                [/'[^']*'/, "string"],
+                // Strings
+                [
+                    /"(?:[^"\\]|\\.)*"/,
+                    "string"
+                ],
 
-                [/--.*/, "comment"],
+                [
+                    /'(?:[^'\\]|\\.)*'/,
+                    "string"
+                ],
 
-                [/\b\d+\b/, "number"],
 
-                [/[a-zA-Z_]\w*/, "identifier"]
+                // Numbers
+                [
+                    /\b\d+(\.\d+)?\b/,
+                    "number"
+                ],
+
+
+                // Keywords
+                [
+                    /[a-zA-Z_]\w*/,
+                    {
+                        cases: {
+                            "@keywords": "keyword",
+                            "@default": "identifier"
+                        }
+                    }
+                ],
+
+
+                // Operators
+                [
+                    /[=+\-*\/%^<>~]/,
+                    "operator"
+                ],
+
+
+                // Brackets
+                [
+                    /[\(\)\[\]\{\}]/,
+                    "@brackets"
+                ]
 
             ]
 
@@ -54,16 +129,22 @@ require(["vs/editor/editor.main"], function () {
 
 
 
-    // Create editor
+    // ===================================
+    // Create Editor
+    // ===================================
+
 
     editor = monaco.editor.create(
         document.getElementById("editor"),
         {
 
             value:
-`-- Lua Studio
+`-- Lua Playground
 
-print("Hello from Lua!")
+local message = "Hello Lua!"
+
+print(message)
+
 
 for i = 1, 5 do
     print(i)
@@ -78,56 +159,89 @@ end
 
             automaticLayout: true,
 
+
             minimap: {
                 enabled: true
             },
 
-            lineNumbers: "on"
+
+            lineNumbers: "on",
+
+            roundedSelection: false,
+
+            scrollBeyondLastLine: false
 
         }
     );
+
+
+
+    // Load saved code
+
+    let saved =
+    localStorage.getItem("lua-code");
+
+
+    if(saved){
+
+        editor.setValue(saved);
+
+    }
 
 
 });
 
 
 
-// ===============================
-// Run Lua
-// ===============================
+
+// =======================================
+// Run Lua Code
+// =======================================
 
 
-document.getElementById("run").onclick = function(){
+function runLua(){
 
 
-    let code = editor.getValue();
-
-
-    let output = document.getElementById("output");
+    let output =
+    document.getElementById("output");
 
 
     output.textContent = "";
 
 
 
-    // Save old console
+    let code =
+    editor.getValue();
 
-    let oldLog = console.log;
+
+
+    // Save code
+
+    localStorage.setItem(
+        "lua-code",
+        code
+    );
+
+
+
+    let oldPrint =
+    console.log;
 
 
 
     console.log = function(...args){
 
-        output.textContent += args.join(" ") + "\n";
+        output.textContent +=
+        args.join(" ") + "\n";
 
     };
 
 
 
-    try {
+    try{
 
 
-        // Execute Lua
+        // Run Lua
 
         fengari.load(code)();
 
@@ -137,76 +251,79 @@ document.getElementById("run").onclick = function(){
 
     catch(error){
 
+
         output.textContent +=
-        "Lua Error:\n" + error;
+        "Lua Error:\n" +
+        error;
 
 
     }
 
 
 
-    // Restore console
-
-    console.log = oldLog;
+    console.log = oldPrint;
 
 
-};
+}
 
 
 
-// ===============================
-// Ctrl + Enter = Run
-// ===============================
 
+// =======================================
+// Run Button
+// =======================================
+
+document
+.getElementById("run")
+.addEventListener(
+"click",
+runLua
+);
+
+
+
+
+// =======================================
+// Ctrl + Enter Shortcut
+// =======================================
 
 document.addEventListener(
 "keydown",
-function(e){
+function(event){
 
-    if(e.ctrlKey && e.key === "Enter"){
 
-        document.getElementById("run").click();
+    if(
+        event.ctrlKey &&
+        event.key === "Enter"
+    ){
+
+        runLua();
 
     }
+
 
 });
 
 
 
-// ===============================
-// Autosave
-// ===============================
 
+// =======================================
+// Autosave
+// =======================================
 
 setInterval(()=>{
 
+
     if(editor){
+
 
         localStorage.setItem(
             "lua-code",
             editor.getValue()
         );
 
-    }
-
-},1000);
-
-
-
-// Load saved code
-
-window.addEventListener(
-"load",
-()=>{
-
-    let saved =
-    localStorage.getItem("lua-code");
-
-
-    if(saved && editor){
-
-        editor.setValue(saved);
 
     }
 
-});
+
+},2000);
