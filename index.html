@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lua Studio</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- Monaco Editor -->
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs/loader.js"></script>
+
+<!-- Lua Runtime -->
+<script src="https://unpkg.com/fengari-web/dist/fengari-web.js"></script>
+
+</head>
+
+<body>
+
+<div id="app">
+
+    <!-- Activity Bar -->
+    <aside class="activity">
+        <div>📁</div>
+        <div>🔍</div>
+        <div>⚙️</div>
+    </aside>
+
+
+    <!-- Explorer -->
+    <aside class="explorer">
+
+        <h3>EXPLORER</h3>
+
+        <div class="file active">
+            📄 main.lua
+        </div>
+
+        <div class="file">
+            📄 player.lua
+        </div>
+
+        <div class="file">
+            📄 config.lua
+        </div>
+
+    </aside>
+
+
+    <!-- Main -->
+    <main>
+
+        <div class="tabs">
+
+            <span>
+                main.lua
+            </span>
+
+            <button id="run">
+                ▶ Run
+            </button>
+
+        </div>
+
+
+        <div id="editor"></div>
+
+
+        <section class="terminal">
+
+            <div class="terminal-title">
+                TERMINAL
+            </div>
+
+            <pre id="output"></pre>
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
