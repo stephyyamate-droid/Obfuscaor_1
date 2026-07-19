@@ -1,0 +1,199 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    background: #1e1e1e;
+    color: #cccccc;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+
+/* Main VS Code layout */
+
+#app {
+    display: grid;
+    grid-template-columns: 50px 240px 1fr;
+    height: 100vh;
+}
+
+
+/* Activity bar */
+
+.activity {
+    background: #181818;
+    border-right: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+    gap: 20px;
+}
+
+.activity div {
+    font-size: 22px;
+    cursor: pointer;
+    opacity: .7;
+}
+
+.activity div:hover {
+    opacity: 1;
+}
+
+
+/* Explorer */
+
+.explorer {
+    background: #252526;
+    border-right: 1px solid #333;
+}
+
+.explorer h3 {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 12px;
+    color: #bbbbbb;
+}
+
+.file {
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.file:hover {
+    background: #2a2d2e;
+}
+
+.file.active {
+    background: #37373d;
+    color: white;
+}
+
+
+/* Main editor area */
+
+main {
+    display: grid;
+    grid-template-rows: 40px 1fr 200px;
+}
+
+
+/* Tabs */
+
+.tabs {
+    background: #252526;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+}
+
+.tabs span {
+    padding: 11px 20px;
+    background: #1e1e1e;
+    border-right: 1px solid #333;
+    font-size: 13px;
+}
+
+
+#run {
+    margin-left: auto;
+    margin-right: 15px;
+
+    background: #0e639c;
+    border: none;
+    color: white;
+
+    padding: 7px 18px;
+    border-radius: 4px;
+
+    cursor: pointer;
+    font-size: 13px;
+}
+
+#run:hover {
+    background: #1177bb;
+}
+
+
+/* Monaco editor */
+
+#editor {
+    height: 100%;
+}
+
+
+/* Terminal */
+
+.terminal {
+    background: #111;
+    border-top: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.terminal-title {
+
+    background: #252526;
+    padding: 8px 15px;
+
+    font-size: 12px;
+    color: #aaa;
+
+    border-bottom: 1px solid #333;
+}
+
+
+#output {
+
+    flex: 1;
+
+    padding: 12px;
+
+    color: #00ff88;
+
+    font-family: Consolas, monospace;
+    font-size: 14px;
+
+    overflow: auto;
+
+}
+
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+/* Mobile */
+
+@media(max-width:700px){
+
+    #app {
+        grid-template-columns: 45px 180px 1fr;
+    }
+
+    .explorer {
+        font-size: 12px;
+    }
+
+}
